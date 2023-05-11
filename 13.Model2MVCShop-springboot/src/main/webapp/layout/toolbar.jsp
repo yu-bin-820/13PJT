@@ -10,7 +10,7 @@
 	
 	<div class="container">
 	       
-		<a class="navbar-brand" href="/index.jsp">Model2 MVC Shop</a>
+		<a class="navbar-brand" href="/index.jsp">BHC</a>
 		
 		<!-- toolBar Button Start //////////////////////// -->
 		<div class="navbar-header">
@@ -83,6 +83,22 @@
 	                     </ul>
 	                 </li>
 	                 
+	               <!-- 주관리 DrowDown  -->
+	               <c:if test="${sessionScope.user.role == 'admin'}">
+		              <li class="dropdown">
+		                     <a  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+		                         <span >주문관리</span>
+		                         <span class="caret"></span>
+		                     </a>
+		                     <ul class="dropdown-menu">
+		                         <li><a href="#">주문상품관리</a></li>
+		                         <li class="divider"></li>
+		                         <li><a href="#">etc..</a></li>
+		                     </ul>
+		                </li>
+	                 </c:if>
+	                 
+	                 
 	                 <li><a href="#">문의</a></li>
 	                 
 	                 <li><a href="#">etc...</a></li>
@@ -154,7 +170,14 @@
 			}); 
 		});
 		
-		//============= 구매이력조회 화면이동 =============
+		//============= 주문상품관리 화면이동 =============
+		$( function() {
+		 	$("a[href='#' ]:contains('주문상품관리')").on("click" , function() {
+		 		self.location = "/purchase/listPurchase"
+			}); 
+		});
+		
+		//============= 문의 화면이동 =============
 		$( function() {
 		 	$("a[href='#' ]:contains('문의')").on("click" , function() {
 		 		self.location = "/inquiry/listInquiry"

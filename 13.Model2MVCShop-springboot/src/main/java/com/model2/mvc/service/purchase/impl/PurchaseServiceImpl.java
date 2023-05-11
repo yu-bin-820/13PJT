@@ -51,14 +51,18 @@ public class PurchaseServiceImpl implements PurchaseService{
 	public void addPurchase(Purchase purchase) throws Exception{
 		// TODO Auto-generated method stub
 		purchaseDao.insertPurchase(purchase);
+		System.out.println();
+		purchaseDao.insertPurchaseAddr(purchase);
 	}
 
 
 	@Override
-	public Map<String, Object> getPurchaseList(Search search, String userId) throws Exception {
-		List<Purchase> list = purchaseDao.getPurchaseList(search, userId);
-		int totalCount = purchaseDao.getTotalCount(userId);
-		
+	public Map<String, Object> getPurchaseList(Search search, User user) throws Exception {
+		System.out.println(user);
+		List<Purchase> list = purchaseDao.getPurchaseList(search, user);
+		//System.out.println("getPurchaseList수행 완료");
+		int totalCount = purchaseDao.getTotalCount(user);
+		//System.out.println("getTotalCount수행완료");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list );
 		map.put("totalCount", new Integer(totalCount));
@@ -85,7 +89,32 @@ public class PurchaseServiceImpl implements PurchaseService{
 	@Override
 	public void updateTranCode(Purchase purchase) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println(purchase.getTranNo());
 		purchaseDao.updateTranCode(purchase);
+	}
+
+	@Override
+	public Map<String, Object> getTranAddr() throws Exception {
+		// TODO Auto-generated method stub
+		List<Purchase> list= purchaseDao.getTranAddr();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("list", list );
+
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getTranAddrNew(Map<String, String> mapBounds) throws Exception {
+		// TODO Auto-generated method stub
+		List<Purchase> list= purchaseDao.getTranAddrNew(mapBounds);
+		System.out.println(list);
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("list", list );
+
+		return map;
 	}
 
 }

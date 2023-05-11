@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -85,6 +86,21 @@ public class ProductRestController {
 //		System.out.println(map);
 //		return map;
 //	}
+	
+	@GetMapping("json/listProduct")
+	public List<Product> listproduct() throws Exception{
+	
+		System.out.println("/product/json/listProduct : Get");
+		//Business Logic
+		Search search = new Search();
+		search.setCurrentPage(1);
+		search.setPageSize(50);
+		System.out.println("::"+search);
+		Map<String, Object> map =productService.getProductList(search);
+		List<Product> list=  (List<Product>) map.get("list");
+		System.out.println(list);
+		return list;
+	}
 	
 	@RequestMapping( value="json/listProduct" , method=RequestMethod.POST)
 	public List listproduct(		@RequestBody Search search ) throws Exception{

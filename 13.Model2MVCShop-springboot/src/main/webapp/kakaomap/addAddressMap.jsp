@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>키워드로 장소검색하고 목록으로 표출하기</title>
+    <title>주소선</title>
 	<!-- 참조 : http://getbootstrap.com/css/   참조 -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	
@@ -62,14 +62,10 @@
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
 </style>
-	<script type="text/javascript">
 </head>
 <body>
 
 
-<!-- ToolBar Start /////////////////////////////////////-->
-<jsp:include page="/layout/toolbar.jsp" />
-	<!-- ToolBar End /////////////////////////////////////-->
 
 	
 <div class="map_wrap">
@@ -79,7 +75,7 @@
         <div class="option">
             <div>
                 <form onsubmit="searchPlaces(); return false;">
-                    키워드 : <input type="text" value="이태원 맛집" id="keyword" size="15"> 
+                    키워드 : <input type="text" value="강남" id="keyword" size="15"> 
                     <button type="submit">검색하기</button> 
                 </form>
             </div>
@@ -89,16 +85,17 @@
         <div id="pagination"></div>
     </div>
 </div>
+		<form class="form-horizontal" id="requestPurchase" name = "detailForm" enctype="multipart/form-data">
 		  <div class="form-group">
 		    <label for="prodDetail" class="col-sm-offset-1 col-sm-3 control-label">구매자주소</label>
 		    <div class="col-sm-4">
-		      <input type="text" name="divyAddr" class="form-control" value="${user.addr}"/>
-			  <input type= 'hidden' id="prodNo" name="prodNo" value='${product.prodNo}'/>
-			  <input type= 'hidden' id="prodNo" name="prodNo" value='${product.prodNo}'/>			  
+		      <input type="text" id="roadAddr" name="roadAddr" class="form-control" value='default'/>
+			  lat<input type= "text" id="lat" name="lat" value=''/>
+			  lng<input type= "text" id="lng" name="lng" value=''/>		  
 		      <button type="button" id="back" class="btn btn-info">확인</button>
 		    </div>
 		  </div>
-		  
+		 </form>
 		  
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 
@@ -211,9 +208,15 @@ function displayPlaces(places) {
             };
             
             //click시 주소입
-            kakao.maps.event.addListener(marker, 'click', function() {
+            kakao.maps.event.addListener(marker, 'click', function(mouseEvent) {
+            	//alert('알람창 활성화'+address);
             	displayAddr(address, lat, lng);
             });
+            
+            itemEl.onclick =  function () {
+            	//alert('알람창 활성화'+address);
+            	displayAddr(address, lat, lng);
+            };
             
         })(marker, places[i].place_name, places[i].address_name, places[i].x, places[i].y);
 
@@ -328,8 +331,13 @@ function removeAllChildNods(el) {
     }
 }
  //주소를 입력창에 넣는 함
- function displayAddr() {
-	 
+ function displayAddr(address, lat, lng) {
+ 	//alert('알람창 활성화'+address);
+	 $("#roadAddr").val(address);
+	 $("#lat").val(lat);
+	 $("#lng").val(lng);
+	// alert($("#lat").val())
+	// alert($("#lng").val())
  }
  
  $(function() {
@@ -337,10 +345,14 @@ function removeAllChildNods(el) {
 		//==> 1 과 3 방법 조합 : $("tagName.className:filter함수") 사용함.	
 		 $("button.btn.btn-info" ).on("click" , function() {
 			//Debug..
-			console.log(  $( "td.ct_btn01:contains('확인')" ).html() );
-			$("form").attr("method" , "POST").attr("action" , "/purchase/addPurchasView.jsp").submit();
-			});
+				window.opener.$('#roadAddr').val($('#roadAddr').val())
+				window.opener.$('#lat').val($('#lat').val())
+				window.opener.$('#lng').val($('#lng').val())
+				window.close();
+				//alert($('#divyAddr').val())
+		 		});
 		});	
+ 
 </script>
 </body>
 </html>

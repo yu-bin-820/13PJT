@@ -41,6 +41,8 @@
 			//==> 1 과 3 방법 조합 : $("tagName.className:filter함수") 사용함.	
 			 $("button.btn.btn-primary" ).on("click" , function() {
 				//Debug..
+				//alert("lat"+$("#lat").val())
+				//alert($("#lng").val())
 				console.log(  $( "td.ct_btn01:contains('구매')" ).html() );
 				$("form").attr("method" , "POST").attr("action" , "/purchase/addPurchase").submit();
 				});
@@ -60,10 +62,12 @@
 			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
 			//==> 1 과 3 방법 조합 : $("tagName.className:filter함수") 사용함.	
 			 $( "button.btn.btn-info" ).on("click" , function() {
-			 		self.location = "../kakaomap/addAddressMap.jsp"
+
+						popWin 
+						= window.open("../kakaomap/addAddressMap.jsp",
+								  "popWin");
 			});
 		});	
-		
 </script>
 </head>
 
@@ -165,11 +169,19 @@
 		  <div class="form-group">
 		    <label for="prodDetail" class="col-sm-offset-1 col-sm-3 control-label">구매자주소</label>
 		    <div class="col-sm-4">
-		      <input type="text" name="divyAddr" class="form-control" value="${user.addr}"/>
+		      <input type="text" id="roadAddr" name="roadAddr" class="form-control" value="${user.addr}"/>
+		      <input type= "hidden" id="lat" name="lat" value=''/>
+			  <input type= "hidden" id="lng" name="lng" value=''/>		
 		    </div>
 		    <button type="button" id="openmap" class="btn btn-info">지도에서 선택</button>
 		  </div>
 		  
+		 <div class="form-group">
+		    <label for="prodDetail" class="col-sm-offset-1 col-sm-3 control-label">상세주소</label>
+		    <div class="col-sm-4">
+		      <input type="text" class="form-control" id="detailAddr" name="detailAddr" placeholder="상세주소">
+		    </div>
+		  </div>
 		  
 		  <div class="form-group">
 		    <label for="prodDetail" class="col-sm-offset-1 col-sm-3 control-label">구매요청사항</label>

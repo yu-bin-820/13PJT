@@ -127,9 +127,11 @@ public class PurchaseController {
 			search.setCurrentPage(1);
 		}
 		search.setPageSize(pageSize);
-		String userId=((User)session.getAttribute("user")).getUserId();
+		User user=(User)session.getAttribute("user");
+		System.out.println(user);
+		
 		//Business logic 수행
-		Map<String, Object> map=purchaseService.getPurchaseList(search,userId);
+		Map<String, Object> map=purchaseService.getPurchaseList(search,user);
 		
 		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
 		System.out.println(resultPage);
@@ -139,8 +141,11 @@ public class PurchaseController {
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
 		
-
-		return "forward:/purchase/listPurchase.jsp";
+		if(user.getRole().equals("admin")) {
+			return "forward:/purchase/listPurchaseAdmin.jsp";
+		} else {
+			return "forward:/purchase/listPurchase.jsp";
+		}
 	}
 	
 //	@RequestMapping("/updatePurchase.do")
@@ -228,6 +233,21 @@ public class PurchaseController {
 		model.addAttribute("purchase",purchase);
 		
 		return "redirect:/purchase/listPurchase";
+	}
+	
+	@RequestMapping(value="getTranAddr", method=RequestMethod.GET)
+	public String getTranAddr( Model model ) throws Exception{
+		System.out.println("/purchase/getTranAddr : GET");
+
+		//Business Logic
+		Map<String , Object> map = purchaseService.getTranAddr();
+
+
+		//Model 과 View 연결
+		System.out.println(map.get("list"));
+		model.addAttribute("list", map.get("list"));
+		
+		return "forward:/kakaomap/tranAddrMap.jsp";
 	}
 	
 

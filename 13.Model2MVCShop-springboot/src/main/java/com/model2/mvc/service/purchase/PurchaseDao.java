@@ -8,13 +8,14 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Purchase;
+import com.model2.mvc.service.domain.User;
 
 @Mapper
 public interface PurchaseDao {
 	
 	public Purchase findPurchase(int tranNo) throws Exception;
 	
-	public List<Purchase> getPurchaseList(Search search, String userId) throws Exception ;
+	public List<Purchase> getPurchaseList(Search search, User user) throws Exception ;
 	
 	public void insertPurchase(Purchase purchase) throws Exception;
 	
@@ -24,6 +25,14 @@ public interface PurchaseDao {
 	
 	public void updateTranCode(Purchase purchase) throws Exception;
 	
-	public int getTotalCount(String userId) throws Exception;
+	public int getTotalCount(User user) throws Exception;
+	
+	public void insertPurchaseAddr(Purchase purchase) throws Exception;
+	
+	public List<Purchase> getTranAddr() throws Exception ;
+
+	public List<Purchase> getTranAddrNew(Map<String, String> mapBounds) throws Exception;
+
+	
 	
 }

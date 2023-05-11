@@ -8,29 +8,55 @@
  	
  	
 	<resultMap id="purchaseSelectMap" type="purchase">
-		<result property="tranNo" 				column="TRAN_NO" 			jdbcType="INTEGER"/>
-		<result property="purchaseProd.prodNo"	column="PROD_NO" 			jdbcType="INTEGER" />
-		<result property="buyer.userId" 		column="BUYER_ID" 			jdbcType="VARCHAR" />
-		<result property="paymentOption" 		column="PAYMENT_OPTION" 	jdbcType="VARCHAR" />
-		<result property="receiverName" 		column="RECEIVER_NAME" 		jdbcType="VARCHAR" />
-		<result property="receiverPhone" 		column="RECEIVER_PHONE" 	jdbcType="VARCHAR" />
-		<result property="divyAddr" 			column="DEMAILADDR" 		jdbcType="VARCHAR" />
-		<result property="divyRequest" 			column="DLVY_REQUEST" 		jdbcType="VARCHAR" />
-		<result property="tranCode" 			column="TRAN_STATUS_CODE" 	jdbcType="VARCHAR" />
-		<result property="divyDate" 			column="DLVY_DATE" 			jdbcType="VARCHAR" />
-		<result property="orderDate" 			column="ORDER_DATA" 		jdbcType="DATE" />
+		<result property="tranNo" 			column="TRAN_NO" 			jdbcType="INTEGER"/>
+		<result property="buyer.userId" 	column="BUYER_ID" 			jdbcType="VARCHAR" />
+		<result property="paymentOption" 	column="PAYMENT_OPTION" 	jdbcType="VARCHAR" />
+		<result property="receiverName" 	column="RECEIVER_NAME" 		jdbcType="VARCHAR" />
+		<result property="receiverPhone" 	column="RECEIVER_PHONE" 	jdbcType="VARCHAR" />
+		<result property="divyRequest" 		column="DLVY_REQUEST" 		jdbcType="VARCHAR" />
+		<result property="tranCode" 		column="TRAN_STATUS_CODE" 	jdbcType="VARCHAR" />
+		<result property="divyDate" 		column="DLVY_DATE" 			jdbcType="VARCHAR" />
+		<result property="roadAddr" 		column="road_address" 		jdbcType="VARCHAR" />
+		<result property="detailAddr" 		column="detail_address" 	jdbcType="VARCHAR" />
+		<result property="lat" 				column="latitude" 			jdbcType="DOUBLE" />
+		<result property="lng" 				column="longitude" 			jdbcType="DOUBLE" />
+		<association property="purchaseProd"	column="prod_no" 		javaType="product"  		select="getProduct" />
 	</resultMap>
+	
+	<resultMap id="productSelectMap" type="product">
+		<result property="prodNo" 		column="PROD_NO" 			jdbcType="INTEGER"/>
+		<result property="prodName"		column="PROD_NAME" 			jdbcType="VARCHAR" />
+		<result property="prodDetail" 	column="PROD_DETAIL" 		jdbcType="VARCHAR" />
+		<result property="manuDate" 	column="MANUFACTURE_DAY" 	jdbcType="VARCHAR" />
+		<result property="price" 		column="PRICE" 				jdbcType="INTEGER" />
+		<result property="fileName" 	column="IMAGE_FILE" 		jdbcType="VARCHAR" />
+		<result property="regDate" 		column="REG_DATE" 			jdbcType="DATE" />
+		<result property="proTranCode" 	column="tran_status_code" 	jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- SQL : Product SELECT -->
+	 <select 	id="getProduct"	parameterType="int"	resultMap="productSelectMap">
+		SELECT
+		PROD_NO , PROD_NAME , PROD_DETAIL , MANUFACTURE_DAY ,  PRICE ,  IMAGE_FILE , REG_DATE		
+		FROM product 
+		WHERE PROD_NO = #{value}
+	 </select>
 	
 	<!-- SQL : INSERT -->
 	<insert 	id="insertPurchase"		parameterType="purchase" >
 	 	insert into transaction
-	 	values (SEQ_TRANSACTION_TRAN_NO.NEXTVAL, #{purchaseProd.prodNo:INTEGER}, #{buyer.userId:VARCHAR}, #{paymentOption:VARCHAR}, #{receiverName:VARCHAR}, #{receiverPhone:VARCHAR}, #{divyAddr:VARCHAR}, #{divyRequest:VARCHAR}, #{tranCode:VARCHAR}, sysdate,  #{divyDate:VARCHAR})
+	 	values (null, #{purchaseProd.prodNo:INTEGER}, #{buyer.userId:VARCHAR}, #{paymentOption:VARCHAR}, #{receiverName:VARCHAR}, #{receiverPhone:VARCHAR}, #{divyRequest:VARCHAR}, #{tranCode:VARCHAR}, now(),  #{divyDate:VARCHAR})
 	 </insert>
+	 
+	<insert 	id="insertPurchaseAddr"		parameterType="purchase" >
+	 	insert into address
+	 	values ((SELECT MAX(tran_no) FROM transaction), #{roadAddr:VARCHAR}, #{detailAddr:VARCHAR}, #{lat:DOUBLE}, #{lng:DOUBLE})
+	</insert>
 	 
 	 <!-- SQL : SELECT ONE -->
 	 <select 	id="findPurchase"	parameterType="int"	resultMap="purchaseSelectMap">
 		SELECT
-		TRAN_NO, PROD_NO , BUYER_ID , TRIM(NVL(PAYMENT_OPTION,0)) PAYMENT_OPTION, RECEIVER_NAME ,  RECEIVER_PHONE ,  DEMAILADDR , DLVY_REQUEST,	DLVY_DATE, ORDER_DATA, TRAN_STATUS_CODE
+		TRAN_NO, PROD_NO , BUYER_ID , TRIM(IFNULL(PAYMENT_OPTION,0)) PAYMENT_OPTION, RECEIVER_NAME ,  RECEIVER_PHONE ,  DLVY_REQUEST,	DLVY_DATE, ORDER_DATA, TRAN_STATUS_CODE
 		FROM transaction
 		WHERE TRAN_NO = #{value}
 	 </select>
@@ -53,11 +79,13 @@
 	<select  id="getPurchaseList"  parameterType="Map"	resultMap="purchaseSelectMap">
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* ,  @ROWNUM := @ROWNUM+1 AS row_seq
-	  					FROM		(	SELECT TRAN_NO, PROD_NO , BUYER_ID , PAYMENT_OPTION , RECEIVER_NAME ,  RECEIVER_PHONE ,  DEMAILADDR , DLVY_REQUEST,	DLVY_DATE, ORDER_DATA, TRIM(IFNULL(TRAN_STATUS_CODE,0)) TRAN_STATUS_CODE
+	  					FROM		(	SELECT TRAN_NO, PROD_NO , BUYER_ID , PAYMENT_OPTION , RECEIVER_NAME ,  RECEIVER_PHONE, DLVY_REQUEST,	DLVY_DATE, ORDER_DATA, TRIM(IFNULL(TRAN_STATUS_CODE,0)) TRAN_STATUS_CODE
 											FROM transaction
+											<if test='user.role=="user"'>
 												<where>
-										 				buyer_ID = #{userId}
+										 				buyer_ID = #{user.userId}
 												</where>
+											</if>
 											ORDER BY ORDER_DATA ) inner_table, (SELECT @ROWNUM :=0) TMP
 						WHERE (@ROWNUM :=0) &lt;= #{search.endRowNum} ) AS A
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 
@@ -74,14 +102,15 @@
 		-->
 	
 	<!-- SQL : SELECT ROW Count -->	 
-	 <select  id="getTotalCount"  parameterType="String"	 resultType="int">
+	 <select  id="getTotalCount"  parameterType="User"	 resultType="int">
 	  	SELECT COUNT(*)
 	  	FROM(	SELECT *
 						FROM transaction
-						
+						<if test='role=="user"'>
 							<where>
 								buyer_ID = #{userId}
 							</where>
+						</if>
 						 ) countTable						
 	 </select>
 	 
@@ -103,5 +132,20 @@
 	   	WHERE tran_no = #{tranNo}
 	 </update>
 	 
+	 	<!-- SQL : SELECT ADDRESS LIST -->
+	<select  id="getTranAddr"  parameterType="Map"	resultMap="purchaseSelectMap">
+	  	SELECT a.tran_no, a.latitude, a.longitude, t.prod_no
+	  	FROM address a, transaction t
+	  	where a.tran_no = t.tran_no
+	 </select>
+	 
+	 	 	<!-- SQL : SELECT ADDRESS LIST -->
+	<select  id="getTranAddrNew"  parameterType="Map"	resultMap="purchaseSelectMap">
+	  	SELECT a.tran_no, a.latitude, a.longitude, t.prod_no
+	  	FROM address a, transaction t
+	  	WHERE a.tran_no = t.tran_no
+	  	AND a.latitude BETWEEN #{swLng} AND #{neLng}
+	  	AND a.longitude BETWEEN #{swLat} AND #{neLat}
+	 </select>
 	 
 </mapper>

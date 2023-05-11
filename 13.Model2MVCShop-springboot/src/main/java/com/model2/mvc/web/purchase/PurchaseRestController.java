@@ -88,7 +88,7 @@ public class PurchaseRestController {
 	public void updateTranCodeByProd(	@RequestParam("prodNo") int prodNo, 
 								@RequestParam("tranCode") String tranCode ) throws Exception{
 	
-		System.out.println("/product/json/updateTranCodeByProd : GET");
+		System.out.println("/purchase/json/updateTranCodeByProd : GET");
 		
 		
 		Purchase purchase = new Purchase();
@@ -103,28 +103,31 @@ public class PurchaseRestController {
 	public void updateTranCode(	@RequestParam("tranNo") int tranNo, 
 								@RequestParam("tranCode") String tranCode ) throws Exception{
 	
-		System.out.println("/product/json/updateTranCode : GET");
+		System.out.println("/purchase/json/updateTranCode : GET");
 		
 		
 		Purchase purchase = new Purchase();
 		purchase.setTranCode(tranCode);
 		purchase.setTranNo(tranNo);
+		System.out.println(purchase.getTranNo());
 		//Business Logic
 		purchaseService.updateTranCode(purchase);
 		
 	}
 	
-//	@RequestMapping( value="json/listProduct" , method=RequestMethod.POST)
-//	public Map listProduct(	@RequestBody Search search ) throws Exception{
-//	
-//		System.out.println("/product/json/listProduct : POST");
-//		//Business Logic
-//		System.out.println("::"+search);
-//		Map<String, Object> map =productService.getProductList(search);
-//		
-//		System.out.println(map);
-//		return map;
-//	}
+	@RequestMapping( value="json/getTranAddr" , method=RequestMethod.POST)
+	public List getTranAddr(	@RequestBody Map mapBounds ) throws Exception{
+	
+		System.out.println("/purchase/json/getTranAddr : POST");
+
+		
+		//Business Logic
+		Map<String , Object> map = purchaseService.getTranAddrNew(mapBounds);
+		List<Purchase> list = (List<Purchase>) map.get("list");
+		
+		//System.out.println(list);
+		return list;
+	}
 	
 //	@RequestMapping( value="json/listProduct" , method=RequestMethod.POST)
 //	public List listproduct(		@RequestBody Search search ) throws Exception{

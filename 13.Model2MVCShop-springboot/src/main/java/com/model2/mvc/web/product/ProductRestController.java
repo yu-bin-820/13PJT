@@ -55,13 +55,15 @@ public class ProductRestController {
 	}
 
 	@RequestMapping( value="json/addProduct", method=RequestMethod.POST )
-	public void addProduct(		@RequestBody Product product ) throws Exception{
+	public String addProduct(		@RequestBody Product product ) throws Exception{
 	
 		System.out.println("/product/json/addProduct : POST");
 		
 		//Business Logic
 		System.out.println("::"+product);
 		productService.insertProduct(product);
+		
+		return "OK";
 		
 	}
 	

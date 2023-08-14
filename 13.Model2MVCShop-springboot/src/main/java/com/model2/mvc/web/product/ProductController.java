@@ -46,7 +46,7 @@ public class ProductController {
 		System.out.println(this.getClass());
 	}
 	
-	@Value("${pageSize}")
+	@Value("${pageUnit}")
 	int pageUnit;
 	
 	@Value("${pageSize}")

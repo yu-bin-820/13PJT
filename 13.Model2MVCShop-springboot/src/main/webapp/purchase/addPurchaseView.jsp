@@ -10,7 +10,7 @@
 <head>
 	<meta charset="UTF-8">
 	
-	<title>상품상세조회</title>
+	<title>상품 구매</title>
 	<!-- 참조 : http://getbootstrap.com/css/   참조 -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	
@@ -82,7 +82,7 @@
 	<!--  화면구성 div Start /////////////////////////////////////-->
 	<div class="container">
 	
-		<h1 class="bg-primary text-center">상품상세조회</h1>
+		<h1 class="bg-primary text-center">상품구매</h1>
 		
 		<!-- form Start /////////////////////////////////////-->
 		<form class="form-horizontal" name = "detailForm" enctype="multipart/form-data">

@@ -10,7 +10,7 @@
 	
 	<div class="container">
 	       
-		<a class="navbar-brand" href="/index.jsp">BHC</a>
+		<a class="navbar-brand" href="/index.jsp">MVC CHICKEN</a>
 		
 		<!-- toolBar Button Start //////////////////////// -->
 		<div class="navbar-header">

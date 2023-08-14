@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.model2.mvc.service.branch.BranchDao">
+ 	
+ 	
+	<resultMap id="branchSelectMap" type="branch">
+		<result property="branchId" 	column="branch_id" 			jdbcType="INTEGER"/>
+		<result property="branchName"	column="branch_name" 		jdbcType="VARCHAR" />
+		<result property="addr" 		column="addr" 				jdbcType="VARCHAR" />
+		<result property="phone" 		column="phone" 				jdbcType="VARCHAR" />
+		<result property="lattude" 		column="latitude" 			jdbcType="DOUBLE" />
+		<result property="longitude" 	column="longitude" 			jdbcType="DOUBLE" />
+	</resultMap>
+	
+	<!-- SQL : INSERT -->
+	<insert 	id="addBranch"		parameterType="branch" >
+	 	INSERT
+		INTO branches( branch_id, branch_name, addr, phone, latitude, longitude) 
+		VALUES	 (	#{branchId} , #{branchName} , #{addr} ,  #{phone} ,  #{lattude} , #{longitude})
+	 </insert>
+	 
+	 <!-- SQL : SELECT ONE -->
+	 <select 	id="getBranch"	parameterType="string"	resultMap="branchSelectMap">
+		SELECT
+		branch_id, branch_name, addr, phone, latitude, longitude 		
+		FROM branches 
+		WHERE branch_id = #{value}
+	 </select>
+	 
+	 <!-- SQL : UPDATE -->
+	 <update	id="updateBranch"	parameterType="branch" >
+	   	UPDATE branches
+	   	<set>
+	   		branch_name 	= #{branchName} ,
+			phone		= 	#{phone},
+			addr 		= 	#{addr} ,
+			lattude		=	#{lattude},
+			longitude	=	#{longitude}
+	   	</set>
+	   	WHERE branch_id = #{branchId}
+	 </update>
+		 
+	<!-- SQL : SELECT LIST -->
+	<select  id="getBranchList"  resultMap="branchSelectMap">
+	  	SELECT 
+	  	branch_id, branch_name, addr, phone, latitude, longitude
+	  	FROM branches
+	 </select>
+	 	<!--  위 두번째 subQuery 의  
+	 			WHERE ROWNUM &lt;= #{endRowNum} ) 는
+	 			WHERE ROWNUM <= #{endRowNum} ) 의미이며..
+	 			< 는 keyword 로 &lt; 를	사용.
+	 			
+	 			<![CDATA[  ~~~  ]]> 를 이용하여 아래와 같이 사용  할 수 있다.
+	 			CDATA ==> Character Data 의 의미 Java 에서 \n 같은 특수문자 처리  
+
+				WHERE ROWNUM <![CDATA[ <=]]> #{endRowNum} )
+		-->
+	 
+</mapper>

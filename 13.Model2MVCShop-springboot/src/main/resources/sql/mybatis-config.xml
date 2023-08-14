@@ -14,6 +14,7 @@
 	
 	<!-- FQCN(Full Qualified Class Name) Alias(별칭관리) -->
 	<typeAliases>
+		<typeAlias alias="branch" type="com.model2.mvc.service.domain.Branch" />
 		<typeAlias alias="purchase" type="com.model2.mvc.service.domain.Purchase" />
 		<typeAlias alias="product" type="com.model2.mvc.service.domain.Product" />
 		<typeAlias alias="user" type="com.model2.mvc.service.domain.User" />
@@ -25,6 +26,7 @@
 		<mapper resource="sql/UserMapper.xml"/>
 		<mapper resource="sql/ProductMapper.xml"/>
 		<mapper resource="sql/PurchaseMapper.xml"/>
+		<mapper resource="sql/BranchMapper.xml"/>
 	</mappers>
 
 </configuration>

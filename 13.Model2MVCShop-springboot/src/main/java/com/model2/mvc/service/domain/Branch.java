@@ -4,15 +4,15 @@ import java.sql.Date;
 
 
 //==>회원정보를 모델링(추상화/캡슐화)한 Bean
-public class Branches {
+public class Branch {
 	
 	///Field
-	private String branchId;
+	private int branchId;
 	private String branchName;
 	private String addr;
 	private String phone;
-	private String lattude;
-	private String longitude;
+	private Double lattude;
+	private Double longitude;
 	/////////////// EL 적용 위해 추가된 Field ///////////
 	private String phone1;
 	private String phone2;
@@ -22,16 +22,16 @@ public class Branches {
 	
 	
 	///Constructor
-	public Branches(){
+	public Branch(){
 	}
 	
 	///Method 
 
-	public String getBranchId() {
+	public int getBranchId() {
 		return branchId;
 	}
 
-	public void setBranchId(String branchId) {
+	public void setBranchId(int branchId) {
 		this.branchId = branchId;
 	}
 
@@ -43,19 +43,19 @@ public class Branches {
 		this.branchName = branchName;
 	}
 
-	public String getLattude() {
+	public Double getLattude() {
 		return lattude;
 	}
 
-	public void setLattude(String lattude) {
+	public void setLattude(Double lattude) {
 		this.lattude = lattude;
 	}
 
-	public String getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(String longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 

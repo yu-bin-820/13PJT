@@ -20,6 +20,8 @@ public class Purchase {
 	private String detailAddr;
 	private String lat;
 	private String lng;
+	private String userId;
+	private int prodNo;
 	
 	public Purchase(){
 	}
@@ -130,5 +132,21 @@ public class Purchase {
 				+ purchaseProd + ", receiverName=" + receiverName + ", receiverPhone=" + receiverPhone + ", tranCode="
 				+ tranCode + ", tranNo=" + tranNo + ", roadAddr=" + roadAddr + ", detailAddr=" + detailAddr + ", lat="
 				+ lat + ", lng=" + lng + "]";
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public int getProdNo() {
+		return prodNo;
+	}
+
+	public void setProdNo(int prodNo) {
+		this.prodNo = prodNo;
 	}
 }

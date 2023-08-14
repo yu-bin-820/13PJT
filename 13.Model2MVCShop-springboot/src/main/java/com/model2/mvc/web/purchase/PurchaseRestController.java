@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -63,16 +65,20 @@ public class PurchaseRestController {
 //		return productService.findProduct(prodNo);
 //	}
 //
-//	@RequestMapping( value="json/addProduct", method=RequestMethod.POST )
-//	public void addProduct(		@RequestBody Product product ) throws Exception{
-//	
-//		System.out.println("/product/json/addProduct : POST");
-//		
-//		//Business Logic
-//		System.out.println("::"+product);
-//		productService.insertProduct(product);
-//		
-//	}
+	@PostMapping("json/addPurchase")
+	public void addProduct(	@RequestBody Purchase purchase ) throws Exception{
+	
+		System.out.println("/product/json/addPurchase : POST");
+		
+		System.out.println(purchase);
+		
+		purchase.setPurchaseProd(productService.findProduct(purchase.getProdNo()));
+		purchase.setBuyer(userService.getUser(purchase.getUserId()));
+		System.out.println(purchase);
+		//Business Logic
+		purchaseService.addPurchase(purchase);
+		
+	}
 	
 //	@RequestMapping( value="json/updateProduct", method=RequestMethod.POST )
 //	public void updateProduct(		@RequestBody Product product ) throws Exception{
@@ -126,6 +132,23 @@ public class PurchaseRestController {
 		List<Purchase> list = (List<Purchase>) map.get("list");
 		
 		//System.out.println(list);
+		return list;
+	}
+	
+	
+	@GetMapping("json/listPurchase/{userId}")
+	public List listPruchase(@PathVariable String userId ) throws Exception{
+	
+		System.out.println("/product/json/listPurchase : Get");
+		System.out.println(userId);
+		Search search = new Search();
+		search.setCurrentPage(1);
+		search.setPageSize(50);
+		User user = userService.getUser(userId);
+		//Business Logic
+		Map<String, Object> map=purchaseService.getPurchaseList(search,user);
+		List<Product> list=  (List<Product>) map.get("list");
+		System.out.println(list);
 		return list;
 	}
 	

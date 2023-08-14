@@ -14,7 +14,11 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	
+	<style>
+ 		body {
+            padding-top : 50px;
+        }
+     </style>
 </head>
 <body>
 	<!-- ToolBar Start /////////////////////////////////////-->
@@ -22,8 +26,7 @@
    	<!-- ToolBar End /////////////////////////////////////-->
    	
    	
-<div id="map" style="width:100%;height:350px;"></div>
-<p><em>지도 영역이 변경되면 지도 정보가 표출됩니다</em></p> 
+<div id="map" style="width:100%;height:800px;"></div>
 <p id="result"></p>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=613cadbd7689ec87a665bc72b8459615"></script>
@@ -108,7 +111,6 @@ kakao.maps.event.addListener(map, 'bounds_changed', function() {
     message += '북동쪽 위도, 경도는  (' + neLat + ','+neLng+')입니다 </p>'; 
     
     var resultDiv = document.getElementById('result');   
-    resultDiv.innerHTML = message;
     
 });
 
@@ -141,15 +143,21 @@ function makeMarker(swLat, swLng, neLat, neLng) {
          //alert("성공");
         // 마커를 표시할 위치와 내용을 가지고 있는 객체 배열, 열려있는 인포윈도우를 담을 변수 생
          var positions = []
-         $.each(JSONData, function(index, purchase){
-        	 	positions.push(
-        			 {content: '<div style="width: 500px; height: 200px; padding:5px;">'
-        			            +'<img width="200" src=\"/images/uploadFiles/'+JSON.stringify(purchase.purchaseProd.fileName).replace("\"","")+'\"/>'
-        			        	+"<button type=\"button\" id=\""+purchase.tranNo+"\" class=\"btn btn-info\">확인</button></div>", 
-        			  latlng: new kakao.maps.LatLng(purchase.lng, purchase.lat),
-        			  tranNo: purchase.tranNo}
-        		)
-         })
+         $.each(JSONData, function(index, purchase) {
+        	    positions.push({
+        	        content: '<div style="width: 500px; height: 200px; padding:5px;">'
+        	            + '<img style="display: inline-block; vertical-align: top; margin-right: 10px;" width="200" src=\"/images/uploadFiles/' + JSON.stringify(purchase.purchaseProd.fileName).replace("\"", "") + '\"/>'
+        	            + '<div style="display: inline-block; vertical-align: top;">'
+        	                + '<div>' + purchase.purchaseProd.prodName + '</div>'
+        	                + '<div>'+ purchase.divyAddr + '</div>'
+        	                + '<div>'+ purchase.divyAddr + '</div>'
+        	            + '</div>'
+        	            + "<button type=\"button\" id=\"" + purchase.tranNo + "\" class=\"btn btn-info\" style=\"display: block; margin-top: 10px;\">확인</button></div>",
+        	        latlng: new kakao.maps.LatLng(purchase.lng, purchase.lat),
+        	        tranNo: purchase.tranNo
+        	    })
+        	});
+
 
 
 		for (var i = 0; i < positions.length; i ++) {

@@ -69,7 +69,7 @@
 
 	 	<div class="row">
 	  		<div class="col-xs-4 col-md-2"><strong>물품번호</strong></div>
-			<div class="col-xs-8 col-md-4">${purchase.purchaseProd.prodNo}</div>
+			<div class="col-xs-8 col-md-4">${purchase.purchaseProd.prodName}</div>
 		</div>
 				
 		<hr/>
